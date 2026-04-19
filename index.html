@@ -3,9 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro</title>
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <div class="container">
+        <h1>Pomodoro Timer</h1>
+        <div class="timer-container">
+            <div class="progress-circle">
+                <svg class="progress-ring" width="200" height="200">
+                    <circle 
+                        class="progress-ring-background" 
+                        cx="100" 
+                        cy="100" 
+                        r="90"
+                        fill="transparent"
+                        stroke="#e6e6e6"
+                        stroke-width="8"/>
+                    <circle 
+                        class="progress-ring-progress" 
+                        cx="100" 
+                        cy="100" 
+                        r="90"
+                        fill="transparent"
+                        stroke="#ff6b6b"
+                        stroke-width="8"
+                        stroke-linecap="round"
+                        transform="rotate(-90 100 100)"/>
+                </svg>
+                <div class="time-display" id="timeDisplay">25:00</div>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="startBtn" class="btn btn-start">Start</button>
+            <button id="stopBtn" class="btn btn-stop" disabled>Stop</button>
+            <button id="resetBtn" class="btn btn-reset">Reset</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
