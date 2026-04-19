@@ -1,8 +1,12 @@
 class PomodoroTimer {
     constructor() {
-        // ポモドーロテクニックの標準時間
-        this.WORK_TIME = 25 * 60; // 25分 = 1500秒
-        this.BREAK_TIME = 5 * 60; // 5分 = 300秒
+        // デフォルトの時間設定（分）
+        this.DEFAULT_WORK_MINUTES = 25;
+        this.DEFAULT_BREAK_MINUTES = 5;
+        
+        // 現在の時間設定（秒）
+        this.workTimeSeconds = this.DEFAULT_WORK_MINUTES * 60;
+        this.breakTimeSeconds = this.DEFAULT_BREAK_MINUTES * 60;
         
         // 現在のモード
         this.MODE = {
@@ -11,7 +15,7 @@ class PomodoroTimer {
         };
         
         this.currentMode = this.MODE.WORK;
-        this.timeRemaining = this.WORK_TIME;
+        this.timeRemaining = this.workTimeSeconds;
         this.isRunning = false;
         this.intervalId = null;
         
@@ -22,6 +26,8 @@ class PomodoroTimer {
         this.stopBtn = document.getElementById('stopBtn');
         this.resetBtn = document.getElementById('resetBtn');
         this.progressRing = document.querySelector('.progress-ring-progress');
+        this.workTimeInput = document.getElementById('workTimeInput');
+        this.breakTimeInput = document.getElementById('breakTimeInput');
         
         // 円の周長を計算（半径90px）
         this.circleCircumference = 2 * Math.PI * 90;
@@ -35,6 +41,10 @@ class PomodoroTimer {
         this.startBtn.addEventListener('click', () => this.start());
         this.stopBtn.addEventListener('click', () => this.stop());
         this.resetBtn.addEventListener('click', () => this.reset());
+        
+        // 時間設定のイベントリスナー
+        this.workTimeInput.addEventListener('change', () => this.updateTimeSettings());
+        this.breakTimeInput.addEventListener('change', () => this.updateTimeSettings());
         
         // 初期表示の更新
         this.updateDisplay();
@@ -72,10 +82,34 @@ class PomodoroTimer {
     reset() {
         this.stop();
         this.currentMode = this.MODE.WORK;
-        this.timeRemaining = this.WORK_TIME;
+        this.timeRemaining = this.workTimeSeconds;
         this.updateDisplay();
         this.updateProgressRing();
         this.updateButtons();
+    }
+    
+    updateTimeSettings() {
+        // 実行中は設定変更を無視
+        if (this.isRunning) {
+            return;
+        }
+        
+        // 入力値を取得して秒に変換
+        const workMinutes = parseInt(this.workTimeInput.value) || this.DEFAULT_WORK_MINUTES;
+        const breakMinutes = parseInt(this.breakTimeInput.value) || this.DEFAULT_BREAK_MINUTES;
+        
+        this.workTimeSeconds = workMinutes * 60;
+        this.breakTimeSeconds = breakMinutes * 60;
+        
+        // 現在のモードに応じて時間を更新
+        if (this.currentMode === this.MODE.WORK) {
+            this.timeRemaining = this.workTimeSeconds;
+        } else {
+            this.timeRemaining = this.breakTimeSeconds;
+        }
+        
+        this.updateDisplay();
+        this.updateProgressRing();
     }
     
     complete() {
@@ -94,7 +128,7 @@ class PomodoroTimer {
     
     startBreak() {
         this.currentMode = this.MODE.BREAK;
-        this.timeRemaining = this.BREAK_TIME;
+        this.timeRemaining = this.breakTimeSeconds;
         this.updateDisplay();
         this.updateProgressRing();
         this.start();
@@ -118,10 +152,14 @@ class PomodoroTimer {
         this.startBtn.disabled = this.isRunning;
         this.stopBtn.disabled = !this.isRunning;
         // resetBtn は常に有効
+        
+        // 実行中は設定変更を無効にする
+        this.workTimeInput.disabled = this.isRunning;
+        this.breakTimeInput.disabled = this.isRunning;
     }
     
     updateProgressRing() {
-        const totalTime = this.currentMode === this.MODE.WORK ? this.WORK_TIME : this.BREAK_TIME;
+        const totalTime = this.currentMode === this.MODE.WORK ? this.workTimeSeconds : this.breakTimeSeconds;
         const progress = (totalTime - this.timeRemaining) / totalTime;
         const offset = this.circleCircumference * (1 - progress);
         this.progressRing.style.strokeDashoffset = offset;

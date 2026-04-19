@@ -35,6 +35,18 @@
                 <div class="time-display" id="timeDisplay">25:00</div>
             </div>
         </div>
+        
+        <!-- 時間設定セクション -->
+        <div class="settings-section">
+            <div class="setting-item">
+                <label for="workTimeInput">Work Time (minutes):</label>
+                <input type="number" id="workTimeInput" min="1" max="60" value="25">
+            </div>
+            <div class="setting-item">
+                <label for="breakTimeInput">Break Time (minutes):</label>
+                <input type="number" id="breakTimeInput" min="1" max="30" value="5">
+            </div>
+        </div>
         <div class="controls">
             <button id="startBtn" class="btn btn-start">Start</button>
             <button id="stopBtn" class="btn btn-stop" disabled>Stop</button>
