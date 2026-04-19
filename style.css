@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff6b35 0%, #d32f2f 50%, #8b0000 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -15,12 +15,13 @@ body {
 }
 
 .container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 248, 240, 0.95);
     border-radius: 20px;
     padding: 40px;
     text-align: center;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(139, 0, 0, 0.2);
     backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 107, 53, 0.3);
 }
 
 h1 {
@@ -87,32 +88,35 @@ h1 {
 }
 
 .btn-start {
-    background: #2ecc71;
+    background: #4caf50;
     color: white;
+    border: 2px solid #388e3c;
 }
 
 .btn-start:hover:not(:disabled) {
-    background: #27ae60;
+    background: #388e3c;
     transform: translateY(-2px);
 }
 
 .btn-stop {
-    background: #e74c3c;
+    background: #d32f2f;
     color: white;
+    border: 2px solid #b71c1c;
 }
 
 .btn-stop:hover:not(:disabled) {
-    background: #c0392b;
+    background: #b71c1c;
     transform: translateY(-2px);
 }
 
 .btn-reset {
-    background: #95a5a6;
+    background: #ff7043;
     color: white;
+    border: 2px solid #e64a19;
 }
 
 .btn-reset:hover {
-    background: #7f8c8d;
+    background: #e64a19;
     transform: translateY(-2px);
 }
 
