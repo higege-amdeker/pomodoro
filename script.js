@@ -141,7 +141,7 @@ class PomodoroTimer {
             `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
         // モード表示を更新
-        const modeText = this.currentMode === this.MODE.WORK ? 'Work Time' : 'Break Time';
+        const modeText = this.currentMode === this.MODE.WORK ? 'Work' : 'Break';
         this.modeDisplay.textContent = modeText;
         
         // タイトルにモードを表示

@@ -45,7 +45,7 @@ h1 {
 }
 
 .setting-item label {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #666;
     margin-bottom: 8px;
@@ -56,7 +56,7 @@ h1 {
     padding: 8px 12px;
     border: 2px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     text-align: center;
     background: rgba(255, 255, 255, 0.9);
     color: #333;
