@@ -21,7 +21,6 @@ body {
     text-align: center;
     box-shadow: 0 20px 40px rgba(139, 0, 0, 0.2);
     backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 107, 53, 0.3);
 }
 
 h1 {
@@ -90,7 +89,6 @@ h1 {
 .btn-start {
     background: #4caf50;
     color: white;
-    border: 2px solid #388e3c;
 }
 
 .btn-start:hover:not(:disabled) {
@@ -101,7 +99,6 @@ h1 {
 .btn-stop {
     background: #d32f2f;
     color: white;
-    border: 2px solid #b71c1c;
 }
 
 .btn-stop:hover:not(:disabled) {
@@ -112,7 +109,6 @@ h1 {
 .btn-reset {
     background: #ff7043;
     color: white;
-    border: 2px solid #e64a19;
 }
 
 .btn-reset:hover {
