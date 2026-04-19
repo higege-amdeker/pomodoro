@@ -91,6 +91,7 @@ h1 {
 /* Firefox のスピナーを非表示 */
 .setting-item input[type=number] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .input-btn {
