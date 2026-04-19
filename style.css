@@ -32,22 +32,23 @@ h1 {
 
 .settings-section {
     display: flex;
-    justify-content: center;
-    gap: 30px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
     margin-bottom: 30px;
-    flex-wrap: wrap;
 }
 
 .setting-item {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
     padding: 12px 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    gap: 12px;
+    width: 100%;
 }
 
 .setting-item label {
