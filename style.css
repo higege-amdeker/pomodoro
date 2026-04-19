@@ -59,15 +59,61 @@ h1 {
     white-space: nowrap;
 }
 
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    background: rgba(255, 255, 255, 0.9);
+}
+
 .setting-item input {
     width: 60px;
     padding: 6px 10px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    border: none;
     font-size: 1.2rem;
     text-align: center;
-    background: rgba(255, 255, 255, 0.9);
+    background: transparent;
     color: #333;
+    outline: none;
+}
+
+/* Chrome, Safari, Edge, Opera のスピナーを非表示 */
+.setting-item input::-webkit-outer-spin-button,
+.setting-item input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox のスピナーを非表示 */
+.setting-item input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.input-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #ff6b35;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-btn:hover:not(:disabled) {
+    background: #e55a2b;
+}
+
+.input-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }
 
 .setting-item input:focus {
@@ -190,17 +236,22 @@ h1 {
     }
     
     .settings-section {
-        gap: 15px;
+        gap: 12px;
         margin-bottom: 25px;
     }
     
     .setting-item {
         padding: 10px 12px;
-        gap: 8px;
     }
     
     .setting-item input {
         width: 50px;
+    }
+    
+    .input-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
     }
     
     .time-display {

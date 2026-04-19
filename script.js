@@ -29,6 +29,10 @@ class PomodoroTimer {
         this.workTimeInput = document.getElementById('workTimeInput');
         this.breakTimeInput = document.getElementById('breakTimeInput');
         
+        // プラス・マイナスボタンの取得
+        this.plusBtns = document.querySelectorAll('.plus-btn');
+        this.minusBtns = document.querySelectorAll('.minus-btn');
+        
         // 円の周長を計算（半径90px）
         this.circleCircumference = 2 * Math.PI * 90;
         
@@ -45,6 +49,14 @@ class PomodoroTimer {
         // 時間設定のイベントリスナー
         this.workTimeInput.addEventListener('change', () => this.updateTimeSettings());
         this.breakTimeInput.addEventListener('change', () => this.updateTimeSettings());
+        
+        // プラス・マイナスボタンのイベントリスナー
+        this.plusBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => this.incrementValue(e.target.dataset.target));
+        });
+        this.minusBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => this.decrementValue(e.target.dataset.target));
+        });
         
         // 初期表示の更新
         this.updateDisplay();
@@ -112,6 +124,32 @@ class PomodoroTimer {
         this.updateProgressRing();
     }
     
+    incrementValue(targetId) {
+        if (this.isRunning) return;
+        
+        const input = document.getElementById(targetId);
+        const currentValue = parseInt(input.value);
+        const maxValue = parseInt(input.max);
+        
+        if (currentValue < maxValue) {
+            input.value = currentValue + 1;
+            this.updateTimeSettings();
+        }
+    }
+    
+    decrementValue(targetId) {
+        if (this.isRunning) return;
+        
+        const input = document.getElementById(targetId);
+        const currentValue = parseInt(input.value);
+        const minValue = parseInt(input.min);
+        
+        if (currentValue > minValue) {
+            input.value = currentValue - 1;
+            this.updateTimeSettings();
+        }
+    }
+    
     complete() {
         this.stop();
         
@@ -156,6 +194,10 @@ class PomodoroTimer {
         // 実行中は設定変更を無効にする
         this.workTimeInput.disabled = this.isRunning;
         this.breakTimeInput.disabled = this.isRunning;
+        
+        // プラス・マイナスボタンも実行中は無効
+        this.plusBtns.forEach(btn => btn.disabled = this.isRunning);
+        this.minusBtns.forEach(btn => btn.disabled = this.isRunning);
     }
     
     updateProgressRing() {
