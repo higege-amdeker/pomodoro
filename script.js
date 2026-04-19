@@ -4,9 +4,8 @@ class PomodoroTimer {
         this.DEFAULT_WORK_MINUTES = 25;
         this.DEFAULT_BREAK_MINUTES = 5;
         
-        // 現在の時間設定（秒）
-        this.workTimeSeconds = this.DEFAULT_WORK_MINUTES * 60;
-        this.breakTimeSeconds = this.DEFAULT_BREAK_MINUTES * 60;
+        // localStorageから設定を読み込み
+        this.loadSettings();
         
         // 現在のモード
         this.MODE = {
@@ -41,6 +40,10 @@ class PomodoroTimer {
     }
     
     init() {
+        // 保存された設定をHTMLに反映
+        this.workTimeInput.value = this.workTimeMinutes;
+        this.breakTimeInput.value = this.breakTimeMinutes;
+        
         // イベントリスナーの設定
         this.startBtn.addEventListener('click', () => this.start());
         this.stopBtn.addEventListener('click', () => this.stop());
@@ -62,6 +65,29 @@ class PomodoroTimer {
         this.updateDisplay();
         this.updateButtons();
         this.updateProgressRing();
+    }
+    
+    loadSettings() {
+        // localStorageから設定を読み込み
+        const savedWorkTime = localStorage.getItem('pomodoro-work-time');
+        const savedBreakTime = localStorage.getItem('pomodoro-break-time');
+        
+        const workMinutes = savedWorkTime ? parseInt(savedWorkTime) : this.DEFAULT_WORK_MINUTES;
+        const breakMinutes = savedBreakTime ? parseInt(savedBreakTime) : this.DEFAULT_BREAK_MINUTES;
+        
+        // 範囲チェック
+        this.workTimeMinutes = Math.max(1, Math.min(60, workMinutes));
+        this.breakTimeMinutes = Math.max(1, Math.min(30, breakMinutes));
+        
+        // 秒に変換
+        this.workTimeSeconds = this.workTimeMinutes * 60;
+        this.breakTimeSeconds = this.breakTimeMinutes * 60;
+    }
+    
+    saveSettings() {
+        // localStorageに設定を保存
+        localStorage.setItem('pomodoro-work-time', this.workTimeMinutes);
+        localStorage.setItem('pomodoro-break-time', this.breakTimeMinutes);
     }
     
     start() {
@@ -106,12 +132,20 @@ class PomodoroTimer {
             return;
         }
         
-        // 入力値を取得して秒に変換
+        // 入力値を取得
         const workMinutes = parseInt(this.workTimeInput.value) || this.DEFAULT_WORK_MINUTES;
         const breakMinutes = parseInt(this.breakTimeInput.value) || this.DEFAULT_BREAK_MINUTES;
         
-        this.workTimeSeconds = workMinutes * 60;
-        this.breakTimeSeconds = breakMinutes * 60;
+        // 範囲チェックして保存
+        this.workTimeMinutes = Math.max(1, Math.min(60, workMinutes));
+        this.breakTimeMinutes = Math.max(1, Math.min(30, breakMinutes));
+        
+        // 秒に変換
+        this.workTimeSeconds = this.workTimeMinutes * 60;
+        this.breakTimeSeconds = this.breakTimeMinutes * 60;
+        
+        // localStorageに保存
+        this.saveSettings();
         
         // 現在のモードに応じて時間を更新
         if (this.currentMode === this.MODE.WORK) {
