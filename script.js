@@ -32,8 +32,8 @@ class PomodoroTimer {
         this.plusBtns = document.querySelectorAll('.plus-btn');
         this.minusBtns = document.querySelectorAll('.minus-btn');
         
-        // 円の周長を計算（半径90px）
-        this.circleCircumference = 2 * Math.PI * 90;
+        // 円の周長を計算（画面サイズに応じて動的に設定）
+        this.updateCircleSize();
         
         // 初期化
         this.init();
@@ -65,6 +65,19 @@ class PomodoroTimer {
         this.updateDisplay();
         this.updateButtons();
         this.updateProgressRing();
+        
+        // リサイズ時に円のサイズを再計算
+        window.addEventListener('resize', () => {
+            this.updateCircleSize();
+            this.updateProgressRing();
+        });
+    }
+    
+    updateCircleSize() {
+        // 画面幅に応じて円の半径を設定
+        const isMobile = window.innerWidth <= 600;
+        this.radius = isMobile ? 70 : 90;
+        this.circleCircumference = 2 * Math.PI * this.radius;
     }
     
     loadSettings() {

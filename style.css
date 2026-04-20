@@ -164,6 +164,13 @@ h1 {
     transition: stroke-dashoffset 1s ease;
 }
 
+@media (max-width: 600px) {
+    .progress-ring-progress {
+        stroke-dasharray: 439.82; /* 2 * π * 70 */
+        stroke-dashoffset: 439.82;
+    }
+}
+
 .time-display {
     position: absolute;
     top: 50%;
