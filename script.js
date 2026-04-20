@@ -32,8 +32,8 @@ class PomodoroTimer {
         this.plusBtns = document.querySelectorAll('.plus-btn');
         this.minusBtns = document.querySelectorAll('.minus-btn');
         
-        // 円の周長を計算（半径90px）
-        this.circleCircumference = 2 * Math.PI * 90;
+        // 円の周長を計算（画面サイズに応じて動的に設定）
+        this.updateCircleSize();
         
         // 初期化
         this.init();
@@ -44,36 +44,81 @@ class PomodoroTimer {
         this.workTimeInput.value = this.workTimeMinutes;
         this.breakTimeInput.value = this.breakTimeMinutes;
         
-        // イベントリスナーの設定
-        this.startBtn.addEventListener('click', () => this.start());
-        this.stopBtn.addEventListener('click', () => this.stop());
-        this.resetBtn.addEventListener('click', () => this.reset());
+        var self = this;
+        this.startBtn.addEventListener('click', function() { self.start(); });
+        this.stopBtn.addEventListener('click', function() { self.stop(); });
+        this.resetBtn.addEventListener('click', function() { self.reset(); });
         
         // 時間設定のイベントリスナー
-        this.workTimeInput.addEventListener('change', () => this.updateTimeSettings());
-        this.breakTimeInput.addEventListener('change', () => this.updateTimeSettings());
+        this.workTimeInput.addEventListener('change', function() { self.updateTimeSettings(); });
+        this.breakTimeInput.addEventListener('change', function() { self.updateTimeSettings(); });
         
         // プラス・マイナスボタンのイベントリスナー
-        this.plusBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => this.incrementValue(e.target.dataset.target));
-        });
-        this.minusBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => this.decrementValue(e.target.dataset.target));
-        });
+        for (var i = 0; i < this.plusBtns.length; i++) {
+            this.plusBtns[i].addEventListener('click', function(e) {
+                self.incrementValue(e.target.getAttribute('data-target'));
+            });
+        }
+        for (var i = 0; i < this.minusBtns.length; i++) {
+            this.minusBtns[i].addEventListener('click', function(e) {
+                self.decrementValue(e.target.getAttribute('data-target'));
+            });
+        }
         
         // 初期表示の更新
         this.updateDisplay();
         this.updateButtons();
         this.updateProgressRing();
+        
+        // リサイズ時に円のサイズを再計算
+        var self = this;
+        window.addEventListener('resize', function() {
+            self.updateCircleSize();
+            self.updateProgressRing();
+        });
+        
+        // タッチデバイス対応
+        this.setupTouchEvents();
+    }
+    
+    updateCircleSize() {
+        // 画面幅に応じて円の半径を設定
+        var isMobile = window.innerWidth <= 600;
+        this.radius = isMobile ? 70 : 90;
+        this.circleCircumference = 2 * Math.PI * this.radius;
+    }
+    
+    setupTouchEvents() {
+        // タッチデバイスでのボタン操作を改善
+        var buttons = document.querySelectorAll('.btn, .input-btn');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                this.style.transform = 'scale(0.95)';
+            });
+            buttons[i].addEventListener('touchend', function(e) {
+                var self = this;
+                setTimeout(function() {
+                    self.style.transform = '';
+                }, 100);
+            });
+        }
     }
     
     loadSettings() {
         // localStorageから設定を読み込み
-        const savedWorkTime = localStorage.getItem('pomodoro-work-time');
-        const savedBreakTime = localStorage.getItem('pomodoro-break-time');
+        var savedWorkTime, savedBreakTime, workMinutes, breakMinutes;
+        try {
+            savedWorkTime = localStorage.getItem('pomodoro-work-time');
+            savedBreakTime = localStorage.getItem('pomodoro-break-time');
+        } catch (e) {
+            // localStorageが使用できない場合はデフォルト値を使用
+            savedWorkTime = null;
+            savedBreakTime = null;
+        }
         
-        const workMinutes = savedWorkTime ? parseInt(savedWorkTime) : this.DEFAULT_WORK_MINUTES;
-        const breakMinutes = savedBreakTime ? parseInt(savedBreakTime) : this.DEFAULT_BREAK_MINUTES;
+        workMinutes = savedWorkTime ? parseInt(savedWorkTime) : this.DEFAULT_WORK_MINUTES;
+        breakMinutes = savedBreakTime ? parseInt(savedBreakTime) : this.DEFAULT_BREAK_MINUTES;
         
         // 範囲チェック
         this.workTimeMinutes = Math.max(1, Math.min(60, workMinutes));
@@ -86,21 +131,27 @@ class PomodoroTimer {
     
     saveSettings() {
         // localStorageに設定を保存
-        localStorage.setItem('pomodoro-work-time', this.workTimeMinutes);
-        localStorage.setItem('pomodoro-break-time', this.breakTimeMinutes);
+        try {
+            localStorage.setItem('pomodoro-work-time', this.workTimeMinutes);
+            localStorage.setItem('pomodoro-break-time', this.breakTimeMinutes);
+        } catch (e) {
+            // localStorageが使用できない場合は何もしない
+            console.log('localStorage not available');
+        }
     }
     
     start() {
         if (this.isRunning) return;
         
+        var self = this;
         this.isRunning = true;
-        this.intervalId = setInterval(() => {
-            this.timeRemaining--;
-            this.updateDisplay();
-            this.updateProgressRing();
+        this.intervalId = setInterval(function() {
+            self.timeRemaining--;
+            self.updateDisplay();
+            self.updateProgressRing();
             
-            if (this.timeRemaining <= 0) {
-                this.complete();
+            if (self.timeRemaining <= 0) {
+                self.complete();
             }
         }, 1000);
         
@@ -133,8 +184,8 @@ class PomodoroTimer {
         }
         
         // 入力値を取得
-        const workMinutes = parseInt(this.workTimeInput.value) || this.DEFAULT_WORK_MINUTES;
-        const breakMinutes = parseInt(this.breakTimeInput.value) || this.DEFAULT_BREAK_MINUTES;
+        var workMinutes = parseInt(this.workTimeInput.value) || this.DEFAULT_WORK_MINUTES;
+        var breakMinutes = parseInt(this.breakTimeInput.value) || this.DEFAULT_BREAK_MINUTES;
         
         // 範囲チェックして保存
         this.workTimeMinutes = Math.max(1, Math.min(60, workMinutes));
@@ -161,9 +212,9 @@ class PomodoroTimer {
     incrementValue(targetId) {
         if (this.isRunning) return;
         
-        const input = document.getElementById(targetId);
-        const currentValue = parseInt(input.value);
-        const maxValue = parseInt(input.max);
+        var input = document.getElementById(targetId);
+        var currentValue = parseInt(input.value);
+        var maxValue = parseInt(input.max);
         
         if (currentValue < maxValue) {
             input.value = currentValue + 1;
@@ -174,9 +225,9 @@ class PomodoroTimer {
     decrementValue(targetId) {
         if (this.isRunning) return;
         
-        const input = document.getElementById(targetId);
-        const currentValue = parseInt(input.value);
-        const minValue = parseInt(input.min);
+        var input = document.getElementById(targetId);
+        var currentValue = parseInt(input.value);
+        var minValue = parseInt(input.min);
         
         if (currentValue > minValue) {
             input.value = currentValue - 1;
@@ -189,12 +240,38 @@ class PomodoroTimer {
         
         if (this.currentMode === this.MODE.WORK) {
             // 作業完了 → 休憩開始
-            alert('ポモドーロ完了！お疲れ様でした！\n5分間の休憩を開始します。');
+            this.showNotification('ポモドーロ完了！お疲れ様でした！\n5分間の休憩を開始します。');
             this.startBreak();
         } else {
             // 休憩完了 → リセット
-            alert('休憩時間終了！\nお疲れ様でした。');
+            this.showNotification('休憩時間終了！\nお疲れ様でした。');
             this.reset();
+        }
+    }
+    
+    showNotification(message) {
+        // iOS Safariでも動作するalertの代替
+        try {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Pomodoro Timer', { body: message });
+            } else {
+                alert(message);
+            }
+        } catch (e) {
+            // フォールバック: モーダル表示
+            var modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '50%';
+            modal.style.left = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.background = 'white';
+            modal.style.padding = '20px';
+            modal.style.border = '2px solid #ccc';
+            modal.style.borderRadius = '10px';
+            modal.style.zIndex = '1000';
+            modal.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+            modal.innerHTML = '<p>' + message + '</p><button onclick="this.parentNode.remove()">OK</button>';
+            document.body.appendChild(modal);
         }
     }
     
@@ -235,9 +312,9 @@ class PomodoroTimer {
     }
     
     updateProgressRing() {
-        const totalTime = this.currentMode === this.MODE.WORK ? this.workTimeSeconds : this.breakTimeSeconds;
-        const progress = (totalTime - this.timeRemaining) / totalTime;
-        const offset = this.circleCircumference * (1 - progress);
+        var totalTime = this.currentMode === this.MODE.WORK ? this.workTimeSeconds : this.breakTimeSeconds;
+        var progress = (totalTime - this.timeRemaining) / totalTime;
+        var offset = this.circleCircumference * (1 - progress);
         this.progressRing.style.strokeDashoffset = offset;
         
         // モードによってプログレスリングの色を変更
