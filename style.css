@@ -156,6 +156,8 @@ h1 {
 
 .progress-ring {
     transform: rotate(-90deg);
+    max-width: 100%;
+    height: auto;
 }
 
 .progress-ring-progress {
@@ -251,14 +253,8 @@ h1 {
     }
     
     .progress-ring {
-        width: 160px !important;
-        height: 160px !important;
-    }
-    
-    .progress-ring circle {
-        r: 70 !important;
-        cx: 80 !important;
-        cy: 80 !important;
+        width: 160px;
+        height: 160px;
     }
     
     .time-display {
