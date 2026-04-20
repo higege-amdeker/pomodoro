@@ -230,12 +230,39 @@ h1 {
 
 @media (max-width: 600px) {
     .container {
-        margin: 20px;
-        padding: 30px;
+        margin: 10px;
+        padding: 20px;
+        max-width: calc(100vw - 20px);
     }
     
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .mode-display {
+        font-size: 1rem;
+        margin-bottom: 20px;
+        padding: 8px 16px;
+    }
+    
+    .timer-container {
+        margin-bottom: 25px;
+    }
+    
+    .progress-ring {
+        width: 160px !important;
+        height: 160px !important;
+    }
+    
+    .progress-ring circle {
+        r: 70 !important;
+        cx: 80 !important;
+        cy: 80 !important;
+    }
+    
+    .time-display {
+        font-size: 1.8rem;
     }
     
     .settings-section {
@@ -256,18 +283,5 @@ h1 {
         height: 28px;
         font-size: 1rem;
         border-radius: 50%;
-    }
-    
-    .time-display {
-        font-size: 2rem;
-    }
-    
-    .progress-ring {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .progress-ring circle {
-        r: 65;
     }
 }
